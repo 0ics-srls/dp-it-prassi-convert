@@ -211,19 +211,49 @@ def meta_doctrib(name: str) -> DoctribName:
     )
 
 
+_MARKDOWN = re.compile(r"[#*_>`]")
+_OGGETTO_HEADER = re.compile(r"^oggetto\s*[:\-]?\s*(.*)$", re.IGNORECASE)
+_PROTOCOL_LINE = re.compile(r"^Prot\b", re.IGNORECASE)
+# the first line of the element that follows the subject in the acts of the Agenzia
+_SUBJECT_STOP = re.compile(r"^(Roma\b|QUESITO\b|PREMESSA\b|Premessa\b|IL DIRETTORE|Con\s|Il\s|La\s|Visto\b|Vista\b|Si\s|Divisione\b|Direzione\b|\d+\s*$)")
+_ABBREVIATION_END = re.compile(r"\b(n|nn|art|artt|lett|cfr|pag|p|d|lgs|dpr)\.\s*$", re.IGNORECASE)
+_SENTENCE_END = re.compile('[.;:!?)”"]\\s*$')
+_MAX_SUBJECT_LINES = 12
+
+
+def _plain(line: str) -> str:
+    return _MARKDOWN.sub("", line).strip()
+
+
+def _continued(lines: list[str], index: int, first: str) -> str:
+    """The subject as the PDF text wraps it: ``first`` plus the following lines until a blank line, the next element of the act, or a closed sentence."""
+    parts = [first]
+    for line in lines[index + 1 : index + 1 + _MAX_SUBJECT_LINES]:
+        nxt = _plain(line)
+        last = parts[-1]
+        abbreviation = bool(_ABBREVIATION_END.search(last))
+        closed = bool(_SENTENCE_END.search(last)) and not abbreviation and nxt[:1].isupper()
+        stop = _SUBJECT_STOP.match(nxt) and not (abbreviation and nxt.isdigit())
+        if not nxt or stop or closed or sum(len(p) + 1 for p in parts) >= MAX_OGGETTO:
+            break
+        parts.append(nxt)
+    return " ".join(parts)
+
+
 def oggetto(text: str) -> str:
-    """Subject: the "OGGETTO:" line, else the first non-empty line, at most 500 characters."""
-    for line in text.splitlines():
-        if "oggetto" in line.lower():
-            cleaned = re.sub(r"[#*_>`]", "", line).strip()
-            found = re.search(r"oggetto\s*[:\-]?\s*(.*)", cleaned, re.IGNORECASE)
-            subject = found.group(1).strip() if found and found.group(1).strip() else cleaned
-            return subject[:MAX_OGGETTO]
-    for line in text.splitlines():
-        cleaned = re.sub(r"[#*_>`]", "", line).strip()
-        if cleaned:
-            return cleaned[:MAX_OGGETTO]
-    return ""
+    """Subject, at most 500 characters: the "OGGETTO:" header with the lines it wraps over (the word in the middle of a sentence is not a header), else the
+    title paragraph after the protocol line of a provvedimento, else the first non-empty line."""
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        header = _OGGETTO_HEADER.match(_plain(line))
+        if header:
+            first = header.group(1).strip() or _plain(line)
+            return _continued(lines, index, first)[:MAX_OGGETTO]
+    non_empty = [(i, _plain(line)) for i, line in enumerate(lines) if _plain(line)]
+    if non_empty and _PROTOCOL_LINE.match(non_empty[0][1]) and len(non_empty) > 1:
+        index, first = non_empty[1]
+        return _continued(lines, index, first)[:MAX_OGGETTO]
+    return non_empty[0][1][:MAX_OGGETTO] if non_empty else ""
 
 
 def resolve(pdf_path: Path | str, text: str, fonte: str | None = None) -> Resolved:

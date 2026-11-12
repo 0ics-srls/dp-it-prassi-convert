@@ -184,6 +184,59 @@ def test_should_extract_the_subject_from_the_oggetto_line_else_the_first_line() 
     assert meta.oggetto("") == ""
 
 
+CIRCOLARE_10 = (
+    "Direzione Centrale Coordinamento Normativo\n"
+    "OGGETTO: Modifiche alla disciplina della tassazione dei redditi di lavoro\n"
+    "dipendente nei casi di concessione in uso promiscuo ai dipendenti\n"
+    "di autoveicoli, motocicli e ciclomotori - Legge 30 dicembre 2024,\n"
+    "n. 207 - Disciplina transitoria - Decreto-legge 28 febbraio 2025,\n"
+    "n. 19, convertito, con modificazioni, dalla legge 24 aprile 2025, n.\n"
+    "60\n"
+    "Roma, 3 luglio 2025\n\n2\nINDICE\n"
+)
+
+
+@pytest.mark.unit
+def test_should_join_the_wrapped_lines_of_the_oggetto_until_the_next_element() -> None:
+    # live finding of phase 80: the PDF text wraps the subject, the first line alone cut it at about 60 characters (the legacy markdown kept the paragraph)
+    subject = meta.oggetto(CIRCOLARE_10)
+
+    assert subject.startswith("Modifiche alla disciplina della tassazione dei redditi di lavoro dipendente nei casi")
+    assert subject.endswith("dalla legge 24 aprile 2025, n. 60")  # "n." + "60": an abbreviation does not end the subject
+    assert "Roma" not in subject
+
+
+@pytest.mark.unit
+def test_should_stop_the_oggetto_at_a_closed_sentence_followed_by_a_new_paragraph() -> None:
+    text = (
+        "OGGETTO: Restituzione dell'IVA non dovuta (articolo 30-ter del d.P.R. n. 633\n"
+        "del 1972)\n"
+        "Sono pervenute alcune richieste di chiarimenti.\n"
+    )
+
+    assert meta.oggetto(text) == "Restituzione dell'IVA non dovuta (articolo 30-ter del d.P.R. n. 633 del 1972)"
+
+
+@pytest.mark.unit
+def test_should_take_the_title_paragraph_after_the_protocol_line_of_a_provvedimento() -> None:
+    text = (
+        "Prot. n. 390267/2025\n"
+        "Approvazione delle caratteristiche e delle modalita d'uso del contrassegno\n"
+        "sostitutivo delle marche da bollo\n"
+        "IL DIRETTORE DELL'AGENZIA\n"
+        "In base al decreto, nell'anno oggetto di comunicazione, dispone\n"
+    )
+
+    assert meta.oggetto(text) == "Approvazione delle caratteristiche e delle modalita d'uso del contrassegno sostitutivo delle marche da bollo"
+
+
+@pytest.mark.unit
+def test_should_not_take_the_word_oggetto_in_the_middle_of_a_sentence_for_a_subject() -> None:
+    text = "Primo rigo del documento\nnell'anno oggetto di comunicazione, per la quale\n"
+
+    assert meta.oggetto(text) == "Primo rigo del documento"
+
+
 @pytest.mark.unit
 @pytest.mark.parametrize("name", ["Circolare_n_9.pdf", "Provv_x.pdf", "xyz.pdf", "RIS_n_1.pdf"])
 def test_should_always_return_a_lower_case_tipo(name: str) -> None:
