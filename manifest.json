@@ -1,0 +1,51 @@
+{
+  "specVersion": "1.1",
+  "type": "stdin",
+  "name": "dp-it-prassi-convert",
+  "version": "0.1.0",
+  "description": "Converts grabbed prassi PDFs (AdE portal, DocTrib interpelli) into <stem>.plan.json load plans: estremi, text (PDF text layer or local OCR), norm references. Writes files only.",
+  "author": "open-lex-it",
+  "authentication": false,
+  "actions": {
+    "execute": {
+      "description": "For each item read the grab output from dirIn and write <stem>.plan.json into dirOut. A document that cannot be read is recorded as skipped with a reason; the item still ends ok.",
+      "input": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "the items to convert, as reported by the detect step",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": { "type": "string", "minLength": 1 },
+                "meta": {
+                  "type": "object",
+                  "properties": { "kind": { "enum": ["ade", "doctrib"] }, "itemId": { "type": "string" } },
+                  "required": ["kind", "itemId"]
+                }
+              },
+              "required": ["key", "meta"]
+            }
+          },
+          "dirIn": { "type": "string", "description": "directory with the grab output" },
+          "dirOut": { "type": "string", "description": "directory for the plan files" }
+        },
+        "required": ["items", "dirIn", "dirOut"]
+      },
+      "output": {
+        "type": "object",
+        "description": "{ dirOut, converted: [{key, plan, meta}], metrics: {documents, ocr, skipped, warnings} }"
+      }
+    },
+    "terminate": {
+      "description": "Stop and clean up.",
+      "input": { "type": "object", "properties": {} }
+    }
+  },
+  "execution": {
+    "timeout": 7200,
+    "memoryLimit": "2Gi",
+    "cpuLimit": "1.0"
+  }
+}
