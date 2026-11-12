@@ -75,7 +75,7 @@ def test_should_take_the_identity_of_a_doctrib_pdf_from_the_sidecar_and_lower_ca
     doc = build(pdf)["documento"]
 
     assert (doc["tipo"], doc["fonte"], doc["source_id"]) == ("interpello", "doctrib", GUID)
-    assert (doc["numero"], doc["anno"], doc["data"]) == ("267", 2024, "2024-12-23"), "the act declares Risposta n. 267/2024: the act is the oracle of its own number"
+    assert (doc["numero"], doc["anno"], doc["data"]) == ("269", 2024, "2024-12-23"), "the number of the source wins over the Risposta n. 267/2024 of the text (F2)"
     assert doc["struttura"] == "Direzione Centrale"
     assert doc["source_url"].endswith(f"id={{{GUID}}}")
     assert doc["oggetto"] == "IVA - Trattamento applicabile"
@@ -87,7 +87,7 @@ def test_should_take_the_doctrib_identity_from_the_file_name_when_the_sidecar_is
 
     doc = build(pdf, fonte="doctrib")["documento"]
 
-    assert (doc["tipo"], doc["source_id"], doc["numero"], doc["anno"]) == ("interpello", GUID, "267", 2024)
+    assert (doc["tipo"], doc["source_id"], doc["numero"], doc["anno"]) == ("interpello", GUID, "269", 2024)
 
 
 @pytest.mark.unit
@@ -146,7 +146,7 @@ def test_should_not_call_ocr_for_a_born_digital_pdf() -> None:
 @pytest.mark.unit
 def test_should_repair_a_year_that_contradicts_the_date_and_count_the_warning(tmp_path: Path) -> None:
     pdf = copy_fixture("RIS_n_16_del_04_03_2025.pdf", tmp_path, "Circolare_10bis_art_119_dl_34_2020.pdf")
-    write_sidecar(pdf, kind="ade", tipo="circolare", numero="3", data="2023-02-08", fonte="ade-portale", sourceId="Circolare_10bis_art_119_dl_34_2020")
+    write_sidecar(pdf, kind="ade", tipo="circolare", numero="16", data="2023-02-08", fonte="ade-portale", sourceId="Circolare_10bis_art_119_dl_34_2020")
 
     result = plan.build_plan(pdf, ocr=fake_ocr).to_dict()
 
@@ -192,3 +192,72 @@ def test_should_read_the_real_photo_pdf_with_the_real_binary(tmp_path: Path) -> 
     VALIDATOR.validate(result)
     assert result["documento"]["estrazione"] == "ocr"
     assert len(result["documento"]["text_raw"]) > 200
+
+
+def _differs(result: dict[str, Any]) -> list[str]:
+    return [w for w in result["warnings"] if "differisce" in w]
+
+
+@pytest.mark.unit
+def test_should_keep_the_source_number_and_warn_when_the_ocr_reads_another_number(tmp_path: Path) -> None:
+    """F2: the OCR of the photo of interpello 118/2022 read 25 and overrode the number of DocTrib."""
+    pdf = copy_fixture("interpello-fotografia.pdf", tmp_path, f"Interpello_2022-02-17_118__{GUID}.pdf")
+    write_sidecar(pdf, kind="doctrib", tipo="Interpello", numero="118", data="2022-02-17", fonte="doctrib", sourceId=GUID)
+
+    result = build(pdf, ocr=lambda _p: "Risposta n. 25/2022 Interpello articolo 11 della legge 27 luglio 2000, n. 212. " * 6)
+
+    doc = result["documento"]
+    assert (doc["estrazione"], doc["numero"], doc["anno"]) == ("ocr", "118", 2022)
+    warnings = _differs(result)
+    assert len(warnings) == 1
+    assert "25" in warnings[0]
+    assert "118" in warnings[0]
+    assert "ocr" in warnings[0]
+
+
+@pytest.mark.ocr
+def test_should_keep_the_source_number_with_the_real_ocr_of_the_photo(tmp_path: Path) -> None:
+    pdf = copy_fixture("interpello-fotografia.pdf", tmp_path, f"Interpello_2022-02-17_118__{GUID}.pdf")
+    write_sidecar(pdf, kind="doctrib", tipo="Interpello", numero="118", data="2022-02-17", fonte="doctrib", sourceId=GUID)
+
+    result = build(pdf, ocr=ocr.ocr_pdf)
+
+    assert result["documento"]["estrazione"] == "ocr"
+    assert result["documento"]["numero"] == "118"
+
+
+@pytest.mark.unit
+def test_should_keep_the_source_number_and_warn_for_a_born_digital_pdf_too(tmp_path: Path) -> None:
+    pdf = copy_fixture("interpello-doctrib.pdf", tmp_path, f"Interpello_2024-12-23_269__{GUID}.pdf")
+    write_sidecar(pdf, kind="doctrib", tipo="Interpello", numero="269", data="2024-12-23", fonte="doctrib", sourceId=GUID)
+
+    result = build(pdf)
+
+    assert result["documento"]["numero"] == "269"
+    assert result["documento"]["estrazione"] == "testo"
+    warnings = _differs(result)
+    assert len(warnings) == 1
+    assert "267" in warnings[0]
+    assert "269" in warnings[0]
+    assert "testo" in warnings[0]
+
+
+@pytest.mark.unit
+def test_should_not_warn_when_the_source_and_the_act_agree(tmp_path: Path) -> None:
+    pdf = copy_fixture("Circolare_n_9_del_24_06_2025.pdf", tmp_path)
+    write_sidecar(pdf, kind="ade", tipo="circolare", numero="9", data="2025-06-24")
+
+    result = build(pdf)
+
+    assert result["documento"]["numero"] == "9"
+    assert _differs(result) == []
+
+
+@pytest.mark.unit
+def test_should_still_let_the_act_correct_a_document_whose_source_gives_no_number(tmp_path: Path) -> None:
+    pdf = copy_fixture("Circolare_n_9_del_24_06_2025.pdf", tmp_path, "Circolare_del_24_06_2025.pdf")
+
+    result = build(pdf)
+
+    assert result["documento"]["numero"] == "9"
+    assert _differs(result) == []

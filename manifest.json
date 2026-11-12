@@ -2,7 +2,7 @@
   "specVersion": "1.1",
   "type": "stdin",
   "name": "dp-it-prassi-convert",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Converts grabbed prassi PDFs (AdE portal, DocTrib interpelli) into <stem>.plan.json load plans: estremi, text (PDF text layer or local OCR), norm references. Writes files only.",
   "author": "open-lex-it",
   "authentication": false,
