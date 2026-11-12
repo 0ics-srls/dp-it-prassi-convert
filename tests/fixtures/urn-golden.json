@@ -1,0 +1,25 @@
+{
+  "_comment": "Golden cases of the URN mappers. Shared with dp-it-giurisprudenza-convert: the `norma` cases are the legacy NormaUrnMapper.TryMap and must give the same answers in both classes (the Corte costituzionale registries and the prassi references join the same it-normativa URNs). The `fiscal` cases are FiscalNormaRefMapper.TryMap.",
+  "norma": [
+    { "name": "legge 197/2022 art 1", "descrizione": "legge", "data": "29/12/2022", "numero": "197", "articolo": "1", "expected": "urn:nir:stato:legge:2022-12-29;197~art1" },
+    { "name": "d.lgs. 241/1997 no article", "descrizione": "decreto legislativo", "data": "09/07/1997", "numero": "241", "articolo": null, "expected": "urn:nir:stato:decreto.legislativo:1997-07-09;241" },
+    { "name": "decreto-legge", "descrizione": "decreto-legge", "data": "31/05/2010", "numero": "78", "articolo": "", "expected": "urn:nir:stato:decreto.legge:2010-05-31;78" },
+    { "name": "decreto legge without hyphen", "descrizione": "Decreto Legge", "data": "31/05/2010", "numero": "78", "articolo": null, "expected": "urn:nir:stato:decreto.legge:2010-05-31;78" },
+    { "name": "d.P.R. 633/1972 art 19", "descrizione": "d.p.r.", "data": "26/10/1972", "numero": "633", "articolo": "19", "expected": "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633~art19" },
+    { "name": "article 19-bis is kept whole", "descrizione": "d.p.r.", "data": "26/10/1972", "numero": "633", "articolo": "19-bis", "expected": "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633~art19-bis" },
+    { "name": "unknown regulation", "descrizione": "regolamento", "data": "01/01/2020", "numero": "1", "articolo": null, "expected": null },
+    { "name": "bad date", "descrizione": "legge", "data": "31/02/2020", "numero": "1", "articolo": null, "expected": null },
+    { "name": "missing number", "descrizione": "legge", "data": "29/12/2022", "numero": "", "articolo": null, "expected": null },
+    { "name": "blank descrizione", "descrizione": "  ", "data": "29/12/2022", "numero": "197", "articolo": null, "expected": null }
+  ],
+  "fiscal": [
+    { "name": "TUIR art 17", "descrizione": "TUIR", "articolo": "17", "expected": "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art17" },
+    { "name": "decreto IVA art 19", "descrizione": "art. 19 del decreto IVA", "articolo": null, "expected": "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633~art19" },
+    { "name": "Statuto art 10", "descrizione": "Statuto del contribuente", "articolo": "10", "expected": "urn:nir:stato:legge:2000-07-27;212~art10" },
+    { "name": "n/anno pattern", "descrizione": "d.P.R. n. 633/1972", "articolo": null, "expected": "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633" },
+    { "name": "imposta di registro", "descrizione": "imposta di registro", "articolo": "5", "expected": "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-04-26;131~art5" },
+    { "name": "accertamento", "descrizione": "accertamento", "articolo": null, "expected": "urn:nir:stato:decreto.del.presidente.della.repubblica:1973-09-29;600" },
+    { "name": "unknown act", "descrizione": "regolamento comunale", "articolo": "3", "expected": null },
+    { "name": "blank", "descrizione": null, "articolo": "3", "expected": null }
+  ]
+}
