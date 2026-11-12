@@ -60,7 +60,8 @@ def test_should_count_ocr_documents_and_skips(raw: Path, tmp_path: Path) -> None
 
     result = run_convert(params(raw, tmp_path, [DOCTRIB_ITEM], fonte="doctrib"), lambda *_: None, ocr_fn=failing)
 
-    assert result["metrics"] == {"documents": 1, "ocr": 0, "skipped": 1, "warnings": 0}
+    # the born-digital fixture is filed as number 269 and declares 267: the source number is kept and the disagreement is counted as one warning (F2)
+    assert result["metrics"] == {"documents": 1, "ocr": 0, "skipped": 1, "warnings": 1}
     skipped = json.loads(next((tmp_path / "plan" / "doctrib_interpello_2022-02").glob(f"Interpello_2022-02-17_118__{GUID}.plan.json")).read_text(encoding="utf-8"))
     assert skipped["documento"] is None
     assert skipped["skipped"][0]["reason"] == "ocr_empty"

@@ -7,6 +7,7 @@ act itself -> norm references -> checks. A document that cannot be turned into t
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from datetime import date
 from typing import TYPE_CHECKING, Any
@@ -57,6 +58,19 @@ def _coerenza_warnings(pdf: Path, resolved: meta.Resolved, text: str, data: date
     return warnings
 
 
+def _source_number_disagreement(resolved: meta.Resolved, text: str, estrazione: str) -> str | None:
+    """The warning when the source gives a number and the act declares another one (the source number is kept), else None."""
+    if not resolved.numero_da_fonte or resolved.numero is None:
+        return None
+    declared = estremi.leggi(text)
+    head = re.match(r"\d+", resolved.numero)
+    if declared is None or (head is not None and int(head.group(0)) == declared.numero):
+        return None
+    return (
+        f"estremi: numero {declared.numero} letto dall'atto ({estrazione}) differisce dal numero della fonte {resolved.numero}; vale quello della fonte"
+    )
+
+
 def build_plan(
     pdf: Path,
     *,
@@ -82,8 +96,12 @@ def build_plan(
 
     resolved = meta.resolve(pdf, text, fonte)
     data = date.fromisoformat(resolved.data) if resolved.data else None
-    corrected = estremi.con_estremi_dell_atto(estremi.Registrato(resolved.numero, resolved.anno, data, text))
+    disagreement = _source_number_disagreement(resolved, text, estrazione)
+    # F2: the number of the source metadata wins over the number read from the text; the act only corrects a number that came from a guess (file name, header)
+    corrected = estremi.con_estremi_dell_atto(estremi.Registrato(resolved.numero, resolved.anno, data, "" if disagreement else text))
     warnings = _coerenza_warnings(pdf, resolved, text, data)
+    if disagreement:
+        warnings.append(disagreement)
     documento = {
         "ente": resolved.ente or DEFAULT_ENTE,
         "struttura": resolved.struttura,

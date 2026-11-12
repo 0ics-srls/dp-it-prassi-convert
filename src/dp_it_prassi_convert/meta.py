@@ -94,6 +94,7 @@ class Resolved:
     struttura: str | None
     fonte: str
     ente: str | None
+    numero_da_fonte: bool = False  # the number comes from the metadata of the source (grab sidecar, DocTrib file name), not from a guess: it wins over the text
 
 
 def _iso(year: int, month: int, day: int) -> str | None:
@@ -278,7 +279,7 @@ def resolve(pdf_path: Path | str, text: str, fonte: str | None = None) -> Resolv
         source_id = (sidecar.source_id if sidecar else None) or (named.source_id if named else path.stem)
         subject = (sidecar.titolo if sidecar else None) or oggetto(text)
         return Resolved(tipo.lower(), numero, anno, data, subject, source_id, sidecar.source_url if sidecar else None,
-                        sidecar.struttura if sidecar else None, "doctrib", sidecar.ente if sidecar else None)
+                        sidecar.struttura if sidecar else None, "doctrib", sidecar.ente if sidecar else None, numero is not None)
 
     name = meta_from_name(path.name)
     tipo = (sidecar.tipo if sidecar and sidecar.tipo else None) or name.tipo
@@ -293,4 +294,5 @@ def resolve(pdf_path: Path | str, text: str, fonte: str | None = None) -> Resolv
     source_id = (sidecar.source_id if sidecar else None) or path.stem
     subject = oggetto(text) or ((sidecar.titolo if sidecar else None) or "")
     return Resolved(tipo.lower(), numero, anno, data, subject, source_id, sidecar.source_url if sidecar else None,
-                    sidecar.struttura if sidecar else None, declared_fonte or "ade-portale", sidecar.ente if sidecar else None)
+                    sidecar.struttura if sidecar else None, declared_fonte or "ade-portale", sidecar.ente if sidecar else None,
+                    bool(sidecar and sidecar.numero))
