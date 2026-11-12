@@ -1,0 +1,128 @@
+{
+  "_comment": "Reviewed against the text of each act (P80-09). Photo PDFs carry no text layer: no references.",
+  "fixtures": {
+    "Circolare_n_9_del_24_06_2025.pdf": {
+      "must_find": [
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633~art54-bis",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1973-09-29;600~art36-bis",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art5",
+        "urn:nir:stato:decreto.legislativo:1997-12-15;446~art5",
+        "urn:nir:stato:legge:2012-12-31;247~art4-bis"
+      ],
+      "reviewed_urns": [
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633~art54",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633~art54-bis",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633~art57",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1973-09-29;600~art36-bis",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1973-09-29;600~art36-ter",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1973-09-29;600~art38",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1973-09-29;600~art39",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art11",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art115",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art116",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art5",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art54",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art56",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art58",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art66",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art73",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art8",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art84",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art86",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art87",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art88",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1998-07-22;322~art2",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:2000-12-28;445~art46",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:2000-12-28;445~art47",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:2001-12-07;435~art17",
+        "urn:nir:stato:decreto.legge:2017-04-24;50~art9-bis",
+        "urn:nir:stato:decreto.legge:2024-08-09;113",
+        "urn:nir:stato:decreto.legge:2024-08-09;113~art2-ter",
+        "urn:nir:stato:decreto.legge:2024-12-27;202~art3-bis",
+        "urn:nir:stato:decreto.legge:2025-06-17;84",
+        "urn:nir:stato:decreto.legislativo:1991-07-23;240~art11",
+        "urn:nir:stato:decreto.legislativo:1997-12-15;446~art10",
+        "urn:nir:stato:decreto.legislativo:1997-12-15;446~art5",
+        "urn:nir:stato:decreto.legislativo:1997-12-15;446~art5-bis",
+        "urn:nir:stato:decreto.legislativo:1997-12-15;446~art8",
+        "urn:nir:stato:decreto.legislativo:1997-12-18;462~art3-bis",
+        "urn:nir:stato:decreto.legislativo:1997-12-18;471",
+        "urn:nir:stato:decreto.legislativo:1997-12-18;471~art12",
+        "urn:nir:stato:decreto.legislativo:1997-12-18;472~art13",
+        "urn:nir:stato:decreto.legislativo:1997-12-18;472~art21",
+        "urn:nir:stato:decreto.legislativo:2000-03-10;74",
+        "urn:nir:stato:decreto.legislativo:2018-01-02;1",
+        "urn:nir:stato:decreto.legislativo:2018-05-18;51",
+        "urn:nir:stato:decreto.legislativo:2022-10-10;150",
+        "urn:nir:stato:decreto.legislativo:2024-02-12;13",
+        "urn:nir:stato:decreto.legislativo:2024-08-05;108",
+        "urn:nir:stato:decreto.legislativo:2025-06-12;81",
+        "urn:nir:stato:legge:1983-01-26;18~art2",
+        "urn:nir:stato:legge:1994-12-23;724~art30",
+        "urn:nir:stato:legge:2011-11-12;183~art10",
+        "urn:nir:stato:legge:2012-12-31;247~art4-bis",
+        "urn:nir:stato:legge:2017-06-21;96",
+        "urn:nir:stato:legge:2024-10-07;143",
+        "urn:nir:stato:legge:2025-02-21;15"
+      ]
+    },
+    "CIRCOLARE_TASSAZIONE_AUTO_USO_PROMISCUO_n._10_del_3_luglio_2025.pdf": {
+      "must_find": [
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art51",
+        "urn:nir:stato:decreto.legge:2025-02-28;19",
+        "urn:nir:stato:legge:2024-12-30;207~art1"
+      ],
+      "reviewed_urns": [
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art51",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art9",
+        "urn:nir:stato:decreto.legge:2025-02-28;19",
+        "urn:nir:stato:decreto.legge:2025-02-28;19~art6",
+        "urn:nir:stato:decreto.legislativo:1992-04-30;285~art54",
+        "urn:nir:stato:legge:2019-12-27;160~art1",
+        "urn:nir:stato:legge:2024-12-30;207",
+        "urn:nir:stato:legge:2024-12-30;207~art1",
+        "urn:nir:stato:legge:2025-04-24;60"
+      ]
+    },
+    "interpello-doctrib.pdf": {
+      "must_find": [
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633",
+        "urn:nir:stato:legge:1989-01-09;13~art1",
+        "urn:nir:stato:legge:1992-02-05;104~art8"
+      ],
+      "reviewed_urns": [
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1972-10-26;633",
+        "urn:nir:stato:decreto.del.presidente.della.repubblica:1996-07-24;503~art1",
+        "urn:nir:stato:decreto.legislativo:2004-01-22;42",
+        "urn:nir:stato:legge:1989-01-09;13",
+        "urn:nir:stato:legge:1989-01-09;13~art1",
+        "urn:nir:stato:legge:1992-02-05;104~art8",
+        "urn:nir:stato:legge:2021-05-21;69"
+      ]
+    },
+    "RIS_n_16_del_04_03_2025.pdf": {
+      "must_find": [
+        "urn:nir:stato:decreto.legislativo:1997-07-09;241~art17",
+        "urn:nir:stato:legge:2000-12-23;388~art34"
+      ],
+      "reviewed_urns": [
+        "urn:nir:stato:decreto.legislativo:1997-07-09;241~art17",
+        "urn:nir:stato:legge:2000-12-23;388~art34",
+        "urn:nir:stato:legge:2023-12-30;213~art1"
+      ]
+    },
+    "Risoluzione_n._29_2025.pdf": {
+      "must_find": [
+        "urn:nir:stato:decreto.legislativo:2005-12-05;252~art11",
+        "urn:nir:stato:decreto.legislativo:2005-12-05;252~art14"
+      ],
+      "reviewed_urns": [
+        "urn:nir:stato:decreto.legislativo:2005-12-05;252",
+        "urn:nir:stato:decreto.legislativo:2005-12-05;252~art11",
+        "urn:nir:stato:decreto.legislativo:2005-12-05;252~art14"
+      ]
+    }
+  }
+}
